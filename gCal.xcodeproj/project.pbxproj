@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C19B00031E6225BF000D5E89 /* DesinableTableViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19B00021E6225BF000D5E89 /* DesinableTableViews.swift */; };
 		C19BFFD11E620EC9000D5E89 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19BFFD01E620EC9000D5E89 /* AppDelegate.swift */; };
 		C19BFFD31E620EC9000D5E89 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19BFFD21E620EC9000D5E89 /* ViewController.swift */; };
 		C19BFFD61E620EC9000D5E89 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C19BFFD41E620EC9000D5E89 /* Main.storyboard */; };
@@ -14,6 +15,7 @@
 		C19BFFDB1E620EC9000D5E89 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C19BFFD91E620EC9000D5E89 /* LaunchScreen.storyboard */; };
 		C19BFFE61E620EC9000D5E89 /* gCalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19BFFE51E620EC9000D5E89 /* gCalTests.swift */; };
 		C19BFFF11E620EC9000D5E89 /* gCalUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19BFFF01E620EC9000D5E89 /* gCalUITests.swift */; };
+		C19BFFFF1E62193F000D5E89 /* CustomCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19BFFFE1E62193F000D5E89 /* CustomCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -34,6 +36,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		C19B00021E6225BF000D5E89 /* DesinableTableViews.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DesinableTableViews.swift; sourceTree = "<group>"; };
 		C19BFFCD1E620EC9000D5E89 /* gCal.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = gCal.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C19BFFD01E620EC9000D5E89 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C19BFFD21E620EC9000D5E89 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -47,6 +50,7 @@
 		C19BFFEC1E620EC9000D5E89 /* gCalUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = gCalUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C19BFFF01E620EC9000D5E89 /* gCalUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = gCalUITests.swift; sourceTree = "<group>"; };
 		C19BFFF21E620EC9000D5E89 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C19BFFFE1E62193F000D5E89 /* CustomCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,11 +102,13 @@
 			isa = PBXGroup;
 			children = (
 				C19BFFD01E620EC9000D5E89 /* AppDelegate.swift */,
+				C19B00021E6225BF000D5E89 /* DesinableTableViews.swift */,
 				C19BFFD21E620EC9000D5E89 /* ViewController.swift */,
 				C19BFFD41E620EC9000D5E89 /* Main.storyboard */,
 				C19BFFD71E620EC9000D5E89 /* Assets.xcassets */,
 				C19BFFD91E620EC9000D5E89 /* LaunchScreen.storyboard */,
 				C19BFFDC1E620EC9000D5E89 /* Info.plist */,
+				C19BFFFE1E62193F000D5E89 /* CustomCell.swift */,
 			);
 			path = gCal;
 			sourceTree = "<group>";
@@ -193,15 +199,18 @@
 				TargetAttributes = {
 					C19BFFCC1E620EC9000D5E89 = {
 						CreatedOnToolsVersion = 8.2.1;
+						LastSwiftMigration = 0820;
 						ProvisioningStyle = Automatic;
 					};
 					C19BFFE01E620EC9000D5E89 = {
 						CreatedOnToolsVersion = 8.2.1;
+						LastSwiftMigration = 0820;
 						ProvisioningStyle = Automatic;
 						TestTargetID = C19BFFCC1E620EC9000D5E89;
 					};
 					C19BFFEB1E620EC9000D5E89 = {
 						CreatedOnToolsVersion = 8.2.1;
+						LastSwiftMigration = 0820;
 						ProvisioningStyle = Automatic;
 						TestTargetID = C19BFFCC1E620EC9000D5E89;
 					};
@@ -260,7 +269,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				C19BFFD31E620EC9000D5E89 /* ViewController.swift in Sources */,
+				C19B00031E6225BF000D5E89 /* DesinableTableViews.swift in Sources */,
 				C19BFFD11E620EC9000D5E89 /* AppDelegate.swift in Sources */,
+				C19BFFFF1E62193F000D5E89 /* CustomCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
