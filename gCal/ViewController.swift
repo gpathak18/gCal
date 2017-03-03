@@ -2,20 +2,36 @@ import UIKit
 
 class ViewController: UIViewController,UITableViewDataSource,UITableViewDelegate {
     
-    var isToggleCell = 0
+    private var isToggleCell = 0
     
     @IBOutlet weak var tableview: UITableView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        UIApplication.shared.statusBarStyle = UIStatusBarStyle.default
         tableview.delegate = self
         tableview.dataSource = self
-        tableview.rowHeight = UITableViewAutomaticDimension
         tableview.estimatedRowHeight = 100
+        tableview.rowHeight = 40
+       
+
     }
     
-    var catList: [[String]] = [["Area"],["Square KM","Square Meter","Square Mile","Square Yard","Square Foot","Square Inch","Hectare","Acre"],["Data Transfer Rate"],["Square KM","Square Meter","Square Mile","Square Yard","Square Foot","Square Inch","Hectare","Acre"],["Digital Storage"],["Square KM","Square Meter","Square Mile","Square Yard","Square Foot","Square Inch","Hectare","Acre"],["Energy"],["Square KM","Square Meter","Square Mile","Square Yard","Square Foot","Square Inch","Hectare","Acre"],["Frequency"],["Square KM","Square Meter","Square Mile","Square Yard","Square Foot","Square Inch","Hectare","Acre"],["Fuel Echonomy"],["Square KM","Square Meter","Square Mile","Square Yard","Square Foot","Square Inch","Hectare","Acre"],["Length"],["Square KM","Square Meter","Square Mile","Square Yard","Square Foot","Square Inch","Hectare","Acre"],["Mass"],["Square KM","Square Meter","Square Mile","Square Yard","Square Foot","Square Inch","Hectare","Acre"],["Plane Angle"],["Square KM","Square Meter","Square Mile","Square Yard","Square Foot","Square Inch","Hectare","Acre"],["Pressure"],["Square KM","Square Meter","Square Mile","Square Yard","Square Foot","Square Inch","Hectare","Acre"],["Speed"],["Square KM","Square Meter","Square Mile","Square Yard","Square Foot","Square Inch","Hectare","Acre"],["Temparature"],["Square KM","Square Meter","Square Mile","Square Yard","Square Foot","Square Inch","Hectare","Acre"],["Time"],["Square KM","Square Meter","Square Mile","Square Yard","Square Foot","Square Inch","Hectare","Acre"],["Volume"],["Square KM","Square Meter","Square Mile","Square Yard","Square Foot","Square Inch","Hectare","Acre"],]
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        UIApplication.shared.statusBarStyle = UIStatusBarStyle.default
+        
+    }
     
+    @IBAction func donePressed(_ sender: Any) {
+        
+        dismiss(animated: true)
+        
+    }
+   private var catList: [[String]] = [["Area"],["Square KM","Square Meter","Square Mile","Square Yard","Square Foot","Square Inch","Hectare","Acre"],["Data Transfer Rate"],["Bit per second","Kilobit per second","Kilobyte per second","Kibibit per second","Megabit per second","Megabyte per second","Mebibit per second","Gigabit per second","Gigabyte per second","Gibibit per second","Terabit per second","Terabyte per second","Tebibit per second"],["Digital Storage"],["Bit","Kilobit","Kibibit","Megabit","Mebibit","Gigabit","Gibibit","Terabit","Tebibit","Petabit","Pebibit","Byte","Kilobyte","Kibibyte","Megabyte","Mebibyte","Gigabyte","Gibibyte","Terabyte","Tebibyte","Petabyte","Pebibyte"],["Energy"],["Joule","Kilojoule","Gram calorie","Kilocalorie","Watt hour","Kilowatt hour","Electronvolt","British thermal unit","US therm","Foot-pound"],["Frequency"],["Hertz","Kilohertz","Megahertz","Gigahertz"],["Fuel Echonomy"],["US Miles per gallon","Miles per gallon (Imperial)","Kilometer per liter","Liter per 100 kilometers"],["Length"],["Kilometer","Meter","Centimeter","Millimeter","Micrometer","Nanometer","Mile","Yard","Foot","Inch","Nautical mile"],["Mass"],["Metric ton","Kilogram","Gram","Milligram","Microgram","Imperial ton","US ton","Stone","Pound","Ounce"],["Plane Angle"],["Degree","Gradian","Milliradian","Minute of arc","Radian","Second of arc"],["Pressure"],["Atmosphere","Bar","Pascal","Pound-force per square inch","Torr"],["Speed"],["Miles per hour","Foot per second","Meter per second","Kilometer per hour","Knot"],["Temparature"],["Celsius","Fahrenheit","Kelvin"],["Time"],["Nanosecond","Microsecond","Millisecond","Second","Minute","Hour","Day","Week","Month","Year","Decade","Century"],["Volume"],["US liquid gallon","US liquid quart","US liquid pint","US legal cup","US fluid ounce","US tablespoon","US teaspoon","Cubic meter","Liter","Milliliter","Imperial gallon","Imperial quart","Imperial pint","Imperial cup","Imperial fluid ounce","Imperial tablespoon","Imperial teaspoon","Cubic foot","Cubic inch"]]
+    
+    private var tappedCell = -1
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -34,33 +50,31 @@ class ViewController: UIViewController,UITableViewDataSource,UITableViewDelegate
         
         
         if indexPath.row%2 == 0 {
-            //        NSLog("1")
-            var cell:UITableViewCell? = self.tableview.dequeueReusableCell(withIdentifier: "Cat") as UITableViewCell!
+
+//            var cell:UITableViewCell? = self.tableview.dequeueReusableCell(withIdentifier: "Cat") as UITableViewCell!
             
-            if(cell == nil)
-            {
-                cell = UITableViewCell(style: UITableViewCellStyle.value1, reuseIdentifier: "Cat")
-            }
-            print("\(cell?.reuseIdentifier)")
-//
-//            NSLog("\(indexPath.row)")
-//            NSLog("count \(catList.count)")
-            
+//            if(cell == nil)
+//            {
+                let cell:UITableViewCell? = UITableViewCell(style: UITableViewCellStyle.value1, reuseIdentifier: "Cat")
+                print("new cat: \(indexPath.row)")
+//            }
+            print(indexPath.row)
+            cell?.tintColor = UIColor.red
+            cell?.accessoryType = .disclosureIndicator
             cell?.textLabel?.text = self.catList[indexPath.row][0]
+            cell?.textLabel?.font = UIFont(name: "Roboto-Regular", size:16);
             return cell!
             
         } else {
-            //     NSLog("2")
-            var cell:CustomCell? = tableview.dequeueReusableCell(withIdentifier: "Sub") as?  CustomCell
-            if(cell == nil)
-            {
-                cell = CustomCell(style: UITableViewCellStyle.default, reuseIdentifier: "Sub")
-            }
             
-            print("\(cell?.reuseIdentifier)")
-
+//            var cell:CustomCell? = tableview.dequeueReusableCell(withIdentifier: "Sub") as?  CustomCell
+//            
+//            if(cell == nil)
+//            {
+              let cell:CustomCell?  = CustomCell(style: UITableViewCellStyle.default, reuseIdentifier: "Sub")
+//            }
+            print("sub: \(indexPath.row)")
             cell?.dataArr = self.catList[indexPath.row]
-            
             
             return cell!
         }
@@ -70,40 +84,56 @@ class ViewController: UIViewController,UITableViewDataSource,UITableViewDelegate
     
     
     func  tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+       
+       let cell:UITableViewCell? = tableView.cellForRow(at: indexPath)
         
-        print("You tapped cell number \(indexPath.row).")
-        let cell:UITableViewCell? = tableview.cellForRow(at: indexPath)
-        
-        print("\(cell?.reuseIdentifier)")
-        
-        if cell?.reuseIdentifier == "Cat"{
-            return UITableViewAutomaticDimension
-        } else {// if cell?.reuseIdentifier == "Sub"{
-            return 0
+        if cell == nil {
+           
+            if indexPath.row%2 == 0 {
+                return UITableViewAutomaticDimension
+            } else {
+                return 0
+            }
+            
+        } else {
+            
+            if cell?.reuseIdentifier == "Sub" && indexPath.row == (tappedCell + 1) {
+                tappedCell = -1
+                if isToggleCell == 0 {
+                    isToggleCell = 1
+                    return CGFloat(self.catList[indexPath.row].count * 30)
+                } else {
+                    isToggleCell = 0
+                    return 0
+                }
+            } else if cell?.reuseIdentifier == "Cat" {
+                return  UITableViewAutomaticDimension
+            } else {
+                return 0
+            }
         }
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        //        if indexPath.row%2 == 0 && isToggleCell == 0 {
-        //           tableView.rowHeight = 150
-        //            isToggleCell = 1
-        //        } else if indexPath.row%2 == 0 && isToggleCell == 1 {
-        //            tableView.rowHeight = 200
-        //            isToggleCell = 0
-        //        } else {
-        //           tableView.rowHeight = 200
-        //        }
-       // let nextRowPath = IndexPath(row: indexPath.row+1, section: 0)        ///tableView.cellForRow(at: <#T##IndexPath#>)
+        let selectedCell:UITableViewCell? = tableView.cellForRow(at: indexPath)
+        selectedCell?.contentView.backgroundColor = UIColor(red: 255/255, green: 193/255, blue: 7/255, alpha: 1)
+        //selectedCell?.backgroundColor = UIColor(red: 255/255, green: 193/255, blue: 7/255, alpha: 1)
+
+        //selectedCell?.textLabel?.textColor = UIColor.white
+        tappedCell = indexPath.row
+                print("You tapped cell number \(indexPath.row).")
         
-        //let cell = tableview.cellForRow(at: nextRowPath as IndexPath)
-        tableView.rowHeight = 150
         tableview.beginUpdates()
         tableview.endUpdates()
-        print("You tapped cell number \(indexPath.row).")
-        print("You tapped cell number \(indexPath.row).")
-        print("You number \(tableview.numberOfRows(inSection: 0)).")
+        
     }
+    
+    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+        //let selectedCell:UITableViewCell? = tableView.cellForRow(at: indexPath)
+        //selectedCell?.textLabel?.textColor = UIColor.black
+    }
+  
     
     override func viewDidAppear(_ animated: Bool) {
         
