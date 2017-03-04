@@ -16,9 +16,7 @@
 		C19BFFD61E620EC9000D5E89 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C19BFFD41E620EC9000D5E89 /* Main.storyboard */; };
 		C19BFFD81E620EC9000D5E89 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C19BFFD71E620EC9000D5E89 /* Assets.xcassets */; };
 		C19BFFDB1E620EC9000D5E89 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C19BFFD91E620EC9000D5E89 /* LaunchScreen.storyboard */; };
-		C19BFFE61E620EC9000D5E89 /* gCalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19BFFE51E620EC9000D5E89 /* gCalTests.swift */; };
-		C19BFFF11E620EC9000D5E89 /* gCalUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19BFFF01E620EC9000D5E89 /* gCalUITests.swift */; };
-		C19BFFFF1E62193F000D5E89 /* CustomCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19BFFFE1E62193F000D5E89 /* CustomCell.swift */; };
+		C19BFFFF1E62193F000D5E89 /* SubTableCells.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19BFFFE1E62193F000D5E89 /* SubTableCells.swift */; };
 		C1DF08E01E639F8D004CD716 /* Roboto-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C1DF08CE1E639F8D004CD716 /* Roboto-Black.ttf */; };
 		C1DF08E11E639F8D004CD716 /* Roboto-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C1DF08CF1E639F8D004CD716 /* Roboto-BlackItalic.ttf */; };
 		C1DF08E21E639F8D004CD716 /* Roboto-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C1DF08D01E639F8D004CD716 /* Roboto-Bold.ttf */; };
@@ -63,12 +61,8 @@
 		C19BFFDA1E620EC9000D5E89 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		C19BFFDC1E620EC9000D5E89 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C19BFFE11E620EC9000D5E89 /* gCalTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = gCalTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		C19BFFE51E620EC9000D5E89 /* gCalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = gCalTests.swift; sourceTree = "<group>"; };
-		C19BFFE71E620EC9000D5E89 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C19BFFEC1E620EC9000D5E89 /* gCalUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = gCalUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		C19BFFF01E620EC9000D5E89 /* gCalUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = gCalUITests.swift; sourceTree = "<group>"; };
-		C19BFFF21E620EC9000D5E89 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		C19BFFFE1E62193F000D5E89 /* CustomCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomCell.swift; sourceTree = "<group>"; };
+		C19BFFFE1E62193F000D5E89 /* SubTableCells.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SubTableCells.swift; sourceTree = "<group>"; };
 		C1DF08CE1E639F8D004CD716 /* Roboto-Black.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Black.ttf"; sourceTree = "<group>"; };
 		C1DF08CF1E639F8D004CD716 /* Roboto-BlackItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-BlackItalic.ttf"; sourceTree = "<group>"; };
 		C1DF08D01E639F8D004CD716 /* Roboto-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Bold.ttf"; sourceTree = "<group>"; };
@@ -112,8 +106,6 @@
 			isa = PBXGroup;
 			children = (
 				C19BFFCF1E620EC9000D5E89 /* gCal */,
-				C19BFFE41E620EC9000D5E89 /* gCalTests */,
-				C19BFFEF1E620EC9000D5E89 /* gCalUITests */,
 				C19BFFCE1E620EC9000D5E89 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -150,30 +142,12 @@
 				C19BFFD71E620EC9000D5E89 /* Assets.xcassets */,
 				C19BFFD91E620EC9000D5E89 /* LaunchScreen.storyboard */,
 				C19BFFDC1E620EC9000D5E89 /* Info.plist */,
-				C19BFFFE1E62193F000D5E89 /* CustomCell.swift */,
+				C19BFFFE1E62193F000D5E89 /* SubTableCells.swift */,
 				C118B1E51E648CAE0065C800 /* DesignableViews.swift */,
 				C118B1E71E648CE40065C800 /* DesinableButtons.swift */,
 				C118B1E91E6498B80065C800 /* CViewController.swift */,
 			);
 			path = gCal;
-			sourceTree = "<group>";
-		};
-		C19BFFE41E620EC9000D5E89 /* gCalTests */ = {
-			isa = PBXGroup;
-			children = (
-				C19BFFE51E620EC9000D5E89 /* gCalTests.swift */,
-				C19BFFE71E620EC9000D5E89 /* Info.plist */,
-			);
-			path = gCalTests;
-			sourceTree = "<group>";
-		};
-		C19BFFEF1E620EC9000D5E89 /* gCalUITests */ = {
-			isa = PBXGroup;
-			children = (
-				C19BFFF01E620EC9000D5E89 /* gCalUITests.swift */,
-				C19BFFF21E620EC9000D5E89 /* Info.plist */,
-			);
-			path = gCalUITests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -330,7 +304,7 @@
 				C118B1EA1E6498B80065C800 /* CViewController.swift in Sources */,
 				C19B00031E6225BF000D5E89 /* DesinableTableViews.swift in Sources */,
 				C19BFFD11E620EC9000D5E89 /* AppDelegate.swift in Sources */,
-				C19BFFFF1E62193F000D5E89 /* CustomCell.swift in Sources */,
+				C19BFFFF1E62193F000D5E89 /* SubTableCells.swift in Sources */,
 				C118B1E81E648CE40065C800 /* DesinableButtons.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -339,7 +313,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C19BFFE61E620EC9000D5E89 /* gCalTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -347,7 +320,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C19BFFF11E620EC9000D5E89 /* gCalUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
