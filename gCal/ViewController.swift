@@ -6,6 +6,9 @@ class ViewController: UIViewController,UITableViewDataSource,UITableViewDelegate
     
     @IBOutlet weak var tableview: UITableView!
     
+    var from: String = ""
+    var to: String = ""
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         UIApplication.shared.statusBarStyle = UIStatusBarStyle.default
@@ -13,8 +16,16 @@ class ViewController: UIViewController,UITableViewDataSource,UITableViewDelegate
         tableview.dataSource = self
         tableview.estimatedRowHeight = 100
         tableview.rowHeight = 40
-       
-
+        
+        
+    }
+    
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
+        var destVC: CViewController = segue.destination as! CViewController
+       // destVC.displayText = self.
+        
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -29,7 +40,7 @@ class ViewController: UIViewController,UITableViewDataSource,UITableViewDelegate
         dismiss(animated: true)
         
     }
-   private var catList: [[String]] = [["Area"],["Square KM","Square Meter","Square Mile","Square Yard","Square Foot","Square Inch","Hectare","Acre"],["Data Transfer Rate"],["Bit per second","Kilobit per second","Kilobyte per second","Kibibit per second","Megabit per second","Megabyte per second","Mebibit per second","Gigabit per second","Gigabyte per second","Gibibit per second","Terabit per second","Terabyte per second","Tebibit per second"],["Digital Storage"],["Bit","Kilobit","Kibibit","Megabit","Mebibit","Gigabit","Gibibit","Terabit","Tebibit","Petabit","Pebibit","Byte","Kilobyte","Kibibyte","Megabyte","Mebibyte","Gigabyte","Gibibyte","Terabyte","Tebibyte","Petabyte","Pebibyte"],["Energy"],["Joule","Kilojoule","Gram calorie","Kilocalorie","Watt hour","Kilowatt hour","Electronvolt","British thermal unit","US therm","Foot-pound"],["Frequency"],["Hertz","Kilohertz","Megahertz","Gigahertz"],["Fuel Echonomy"],["US Miles per gallon","Miles per gallon (Imperial)","Kilometer per liter","Liter per 100 kilometers"],["Length"],["Kilometer","Meter","Centimeter","Millimeter","Micrometer","Nanometer","Mile","Yard","Foot","Inch","Nautical mile"],["Mass"],["Metric ton","Kilogram","Gram","Milligram","Microgram","Imperial ton","US ton","Stone","Pound","Ounce"],["Plane Angle"],["Degree","Gradian","Milliradian","Minute of arc","Radian","Second of arc"],["Pressure"],["Atmosphere","Bar","Pascal","Pound-force per square inch","Torr"],["Speed"],["Miles per hour","Foot per second","Meter per second","Kilometer per hour","Knot"],["Temparature"],["Celsius","Fahrenheit","Kelvin"],["Time"],["Nanosecond","Microsecond","Millisecond","Second","Minute","Hour","Day","Week","Month","Year","Decade","Century"],["Volume"],["US liquid gallon","US liquid quart","US liquid pint","US legal cup","US fluid ounce","US tablespoon","US teaspoon","Cubic meter","Liter","Milliliter","Imperial gallon","Imperial quart","Imperial pint","Imperial cup","Imperial fluid ounce","Imperial tablespoon","Imperial teaspoon","Cubic foot","Cubic inch"]]
+    private var catList: [[String]] = [["Area"],["Square KM","Square Meter","Square Mile","Square Yard","Square Foot","Square Inch","Hectare","Acre"],["Data Transfer Rate"],["Bit per second","Kilobit per second","Kilobyte per second","Kibibit per second","Megabit per second","Megabyte per second","Mebibit per second","Gigabit per second","Gigabyte per second","Gibibit per second","Terabit per second","Terabyte per second","Tebibit per second"],["Digital Storage"],["Bit","Kilobit","Kibibit","Megabit","Mebibit","Gigabit","Gibibit","Terabit","Tebibit","Petabit","Pebibit","Byte","Kilobyte","Kibibyte","Megabyte","Mebibyte","Gigabyte","Gibibyte","Terabyte","Tebibyte","Petabyte","Pebibyte"],["Energy"],["Joule","Kilojoule","Gram calorie","Kilocalorie","Watt hour","Kilowatt hour","Electronvolt","British thermal unit","US therm","Foot-pound"],["Frequency"],["Hertz","Kilohertz","Megahertz","Gigahertz"],["Fuel Echonomy"],["US Miles per gallon","Miles per gallon (Imperial)","Kilometer per liter","Liter per 100 kilometers"],["Length"],["Kilometer","Meter","Centimeter","Millimeter","Micrometer","Nanometer","Mile","Yard","Foot","Inch","Nautical mile"],["Mass"],["Metric ton","Kilogram","Gram","Milligram","Microgram","Imperial ton","US ton","Stone","Pound","Ounce"],["Plane Angle"],["Degree","Gradian","Milliradian","Minute of arc","Radian","Second of arc"],["Pressure"],["Atmosphere","Bar","Pascal","Pound-force per square inch","Torr"],["Speed"],["Miles per hour","Foot per second","Meter per second","Kilometer per hour","Knot"],["Temparature"],["Celsius","Fahrenheit","Kelvin"],["Time"],["Nanosecond","Microsecond","Millisecond","Second","Minute","Hour","Day","Week","Month","Year","Decade","Century"],["Volume"],["US liquid gallon","US liquid quart","US liquid pint","US legal cup","US fluid ounce","US tablespoon","US teaspoon","Cubic meter","Liter","Milliliter","Imperial gallon","Imperial quart","Imperial pint","Imperial cup","Imperial fluid ounce","Imperial tablespoon","Imperial teaspoon","Cubic foot","Cubic inch"]]
     
     private var tappedCell = -1
     
@@ -38,9 +49,9 @@ class ViewController: UIViewController,UITableViewDataSource,UITableViewDelegate
         // Dispose of any resources that can be recreated.
     }
     
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 1;
-    }
+    //func numberOfSections(in tableView: UITableView) -> Int {
+      //  return 1;
+    //}
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return catList.count;
@@ -50,14 +61,14 @@ class ViewController: UIViewController,UITableViewDataSource,UITableViewDelegate
         
         
         if indexPath.row%2 == 0 {
-
-//            var cell:UITableViewCell? = self.tableview.dequeueReusableCell(withIdentifier: "Cat") as UITableViewCell!
             
-//            if(cell == nil)
-//            {
-                let cell:UITableViewCell? = UITableViewCell(style: UITableViewCellStyle.value1, reuseIdentifier: "Cat")
-                print("new cat: \(indexPath.row)")
-//            }
+            //            var cell:UITableViewCell? = self.tableview.dequeueReusableCell(withIdentifier: "Cat") as UITableViewCell!
+            
+            //            if(cell == nil)
+            //            {
+            let cell:UITableViewCell? = UITableViewCell(style: UITableViewCellStyle.value1, reuseIdentifier: "Cat")
+            print("new cat: \(indexPath.row)")
+            //            }
             print(indexPath.row)
             cell?.tintColor = UIColor.red
             cell?.accessoryType = .disclosureIndicator
@@ -67,12 +78,12 @@ class ViewController: UIViewController,UITableViewDataSource,UITableViewDelegate
             
         } else {
             
-//            var cell:CustomCell? = tableview.dequeueReusableCell(withIdentifier: "Sub") as?  CustomCell
-//            
-//            if(cell == nil)
-//            {
-              let cell:CustomCell?  = CustomCell(style: UITableViewCellStyle.default, reuseIdentifier: "Sub")
-//            }
+            //            var cell:CustomCell? = tableview.dequeueReusableCell(withIdentifier: "Sub") as?  CustomCell
+            //
+            //            if(cell == nil)
+            //            {
+            let cell:SubTableCells?  = SubTableCells(style: UITableViewCellStyle.default, reuseIdentifier: "Sub")
+            //            }
             print("sub: \(indexPath.row)")
             cell?.dataArr = self.catList[indexPath.row]
             
@@ -84,11 +95,11 @@ class ViewController: UIViewController,UITableViewDataSource,UITableViewDelegate
     
     
     func  tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-       
-       let cell:UITableViewCell? = tableView.cellForRow(at: indexPath)
+        
+        let cell:UITableViewCell? = tableView.cellForRow(at: indexPath)
         
         if cell == nil {
-           
+            
             if indexPath.row%2 == 0 {
                 return UITableViewAutomaticDimension
             } else {
@@ -117,15 +128,23 @@ class ViewController: UIViewController,UITableViewDataSource,UITableViewDelegate
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         let selectedCell:UITableViewCell? = tableView.cellForRow(at: indexPath)
+        
         selectedCell?.contentView.backgroundColor = UIColor(red: 255/255, green: 193/255, blue: 7/255, alpha: 1)
-        //selectedCell?.backgroundColor = UIColor(red: 255/255, green: 193/255, blue: 7/255, alpha: 1)
-
-        //selectedCell?.textLabel?.textColor = UIColor.white
         tappedCell = indexPath.row
-                print("You tapped cell number \(indexPath.row).")
+        
+        //selectedCell?.backgroundColor = UIColor(red: 255/255, green: 193/255, blue: 7/255, alpha: 1)
+        
+        //selectedCell?.textLabel?.textColor = UIColor.white
+        
+        //                print("You tapped cell number \(indexPath.row).")
+        
+        
         
         tableview.beginUpdates()
         tableview.endUpdates()
+        
+        tableview.scrollToRow(at: indexPath,
+                              at: UITableViewScrollPosition.top, animated: true)
         
     }
     
@@ -133,7 +152,7 @@ class ViewController: UIViewController,UITableViewDataSource,UITableViewDelegate
         //let selectedCell:UITableViewCell? = tableView.cellForRow(at: indexPath)
         //selectedCell?.textLabel?.textColor = UIColor.black
     }
-  
+    
     
     override func viewDidAppear(_ animated: Bool) {
         

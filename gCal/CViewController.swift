@@ -11,13 +11,22 @@ import UIKit
 class CViewController: UIViewController {
     
     @IBOutlet weak var displayText: UITextView!
+    @IBOutlet weak var exptext: UITextView!
     
+    @IBOutlet var Container: UIView!
+    @IBOutlet weak var backView: UIView!
+    @IBOutlet weak var frontView: UIView!
+    @IBOutlet weak var conversionText: DesinableButtons!
+    
+    private var selectedText: String = ""
     private var operation = ""
     private var operand1: Double? = nil
     private var operand2: Double? = nil
     private var isClearDisplay: Int = 0
     private var operationPerformed = false
     private var isOperand2Required = false
+    
+    private var expressionText = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -47,6 +56,8 @@ class CViewController: UIViewController {
         }
         
         displayText.text = text
+        expressionText += text
+        exptext.text.append(text)
     }
     
     @IBAction func clearPressed(sender: AnyObject) {
@@ -57,6 +68,9 @@ class CViewController: UIViewController {
         operation = ""
         isOperand2Required = false
         operationPerformed = false
+        isClearDisplay = 0
+        expressionText = ""
+        exptext.text = ""
         
     }
     
@@ -74,6 +88,8 @@ class CViewController: UIViewController {
         }
         
         displayText.text = text
+        expressionText += text
+        exptext.text.append(text)
     }
     
     @IBAction func signPressed(sender: AnyObject) {
@@ -87,6 +103,8 @@ class CViewController: UIViewController {
         }
         
         displayText.text = text
+        expressionText += text
+        exptext.text.append(text)
     }
     
     @IBAction func percentPressed(sender: AnyObject) {
@@ -124,10 +142,35 @@ class CViewController: UIViewController {
         displayText.text = text
     }
     
+    @IBAction func viewTapped(_ sender: UITapGestureRecognizer) {
+        
+        let views = (frontView: self.frontView, backView: self.backView)
+        
+        let transitionOptions = UIViewAnimationOptions.transitionFlipFromBottom
+        
+        UIView.transition(with: self.Container, duration: 1.0, options: transitionOptions, animations: {
+            // remove the front object...
+            views.frontView.removeFromSuperview()
+            
+            // ... and add the other object
+            self.Container.addSubview(views.backView)
+            
+        }, completion: { finished in
+            // any code entered here will be applied
+            // .once the animation has completed
+        })
+   
+    }
+    
+    
     @IBAction func addPressed(sender: AnyObject) {
         
         let text: String = displayText.text
         let dblValue: Double = Double(text)!
+        
+        if operation != "" && operation != "+" {
+            performEqualOperation()
+        }
         
         operation = "+"
         if !operationPerformed && !isOperand2Required {
@@ -143,12 +186,19 @@ class CViewController: UIViewController {
             }
             isClearDisplay = 1
         }
+        
+        expressionText += "+"
+        exptext.text.append(text)
     }
     
     @IBAction func subtractPressed(sender: AnyObject) {
         
         let text: String = displayText.text
         let dblValue: Double = Double(text)!
+        
+        if operation != "" && operation != "-" {
+            performEqualOperation()
+        }
         
         operation = "-"
         if !operationPerformed && !isOperand2Required {
@@ -249,6 +299,13 @@ class CViewController: UIViewController {
     }
     
     @IBAction func equalPressed(sender: AnyObject) {
+        
+        performEqualOperation()
+        
+    }
+    
+    private func performEqualOperation() {
+        
         
         let dblValue: Double = Double(displayText.text)!
         
