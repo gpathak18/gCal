@@ -11,15 +11,26 @@ import UIKit
 class CViewController: UIViewController {
     
     @IBOutlet weak var displayText: UITextView!
-    @IBOutlet weak var exptext: UITextView!
+    @IBOutlet weak var infoTextArea: UITextView!
+    @IBOutlet weak var unitTextArea: UITextView!
+    
+    @IBOutlet weak var swapBtn: DesinableButtons!
     
     @IBOutlet var Container: UIView!
-    @IBOutlet weak var backView: UIView!
-    @IBOutlet weak var frontView: UIView!
+    
     @IBOutlet weak var conversionText: DesinableButtons!
     
+    private var isUnitToggle = 0
+    
+    let swapImage = UIImage(named:"ic_swap_horiz_18pt")?.withRenderingMode(
+        UIImageRenderingMode.alwaysTemplate)
+    
+    let cnvtImage = UIImage(named:"ic_filter_none_18pt")?.withRenderingMode(
+        UIImageRenderingMode.alwaysTemplate)
+    
+    var convText: String = ""
     private var selectedText: String = ""
-    private var operation = ""
+    private var operation: String = ""
     private var operand1: Double? = nil
     private var operand2: Double? = nil
     private var isClearDisplay: Int = 0
@@ -28,40 +39,79 @@ class CViewController: UIViewController {
     
     private var expressionText = ""
     
+    private var isConvertorOn = 0
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         UIApplication.shared.statusBarStyle = UIStatusBarStyle.lightContent
         displayText.text = "0"
+        
+        conversionText.tintColor = UIColor(white:0, alpha:1)
+        conversionText.setImage(cnvtImage, for:UIControlState.normal)
+        
+        //unitTextArea.text.minimumScaleFactor = 10/UIFont.labelFontSize
+        //unitTextArea.adjustsFontSizeToFitWidth = true
+        
+        // self.conversionText.setTitle(PassData.sharedInstance.cnvrTxt, for: .normal)
     }
+    
+    @IBAction func unwindToCV(segue: UIStoryboardSegue) {
+        unitTextArea.tintColor = UIColor.black
+        
+        if PassData.sharedInstance.from != nil && PassData.sharedInstance.to != nil {
+            unitTextArea.text = PassData.sharedInstance.from.symbol + " to " + PassData.sharedInstance.to.symbol
+            isConvertorOn = 1
+            isUnitToggle = 1
+            clearAll()
+        }
+        
+    }
+    
     
     @IBAction func buttonPressed(sender: AnyObject) {
         
         var text: String = displayText.text
         
+        text = text.components(separatedBy: " ")[0]
+        
+        infoTextArea.text = infoTextArea.text.components(separatedBy: " ")[0]
+        
         operationPerformed = false
         
         if text == "0" && sender.tag == 0 {
             text = "0"
+            infoTextArea.text.append("")
         } else if text == "0" && sender.tag != 0 {
             text = String(sender.tag)
+            infoTextArea.text.append(String(sender.tag))
         } else if isClearDisplay == 1 {
             isClearDisplay = 0
             text = String(sender.tag)
+            infoTextArea.text.append(String(sender.tag))
         } else {
             text.append(String(sender.tag))
+            infoTextArea.text.append(String(sender.tag))
         }
         
         if operation != "" && isOperand2Required {
             isOperand2Required = false
         }
         
-        displayText.text = text
-        expressionText += text
-        exptext.text.append(text)
+        //infoTextArea.text = infoTextArea.text+String(sender.tag)
+        
+        if isConvertorOn == 1 {
+            infoTextArea.text =  infoTextArea.text + " " + PassData.sharedInstance.from.symbol
+        } else {
+            
+            displayText.text = text
+            
+        }
+        
+        
     }
     
-    @IBAction func clearPressed(sender: AnyObject) {
-        
+    func clearAll() {
         displayText.text = "0"
         operand1 = nil
         operand2 = nil
@@ -70,26 +120,78 @@ class CViewController: UIViewController {
         operationPerformed = false
         isClearDisplay = 0
         expressionText = ""
-        exptext.text = ""
-        
+        infoTextArea.text = ""
     }
     
-    @IBAction func dotPressed(sender: AnyObject) {
+    @IBAction func clearPressed(sender: AnyObject) {
+        clearAll()
+        unitTextArea.text = ""
+        isConvertorOn = 0
+    }
+    
+    @IBAction func convertPressed(_ sender: Any) {
         
-        var text: String = displayText.text
+        //        UIView.animate(withDuration:0.5, animations: { () -> Void in
+        //
+        //            self.unitTextArea.transform = CGAffineTransform(rotationAngle: .pi)
+        //        })
         
-        if text.range(of:".") == nil {
-            
-            if text == "0" {
-                text = "0."
-            } else {
-                text.append(".")
-            }
+        var val: String = infoTextArea.text
+        
+        val = val.components(separatedBy: " ")[0]
+        
+        let convertedUnit = ConversionUtility.convert(category: PassData.sharedInstance.category, from: PassData.sharedInstance.from, to: PassData.sharedInstance.to, value: Double(val)!)
+        
+        if isUnitToggle == 0 {
+            swapBtn.tintColor = UIColor(white:0, alpha:1)
+            swapBtn.setImage(swapImage, for:UIControlState.normal)
+            unitTextArea.text = PassData.sharedInstance.from.symbol + " to " + PassData.sharedInstance.to.symbol
+            isUnitToggle = 1
+        } else {
+            unitTextArea.text = PassData.sharedInstance.to.symbol + " to " + PassData.sharedInstance.from.symbol
+            isUnitToggle = 0
         }
         
-        displayText.text = text
-        expressionText += text
-        exptext.text.append(text)
+        displayText.text = convertedUnit
+        
+        
+    }
+    @IBAction func dotPressed(sender: AnyObject) {
+        
+        if isConvertorOn == 0 {
+            var text: String = displayText.text
+            
+            if text.range(of:".") == nil {
+                
+                if text == "0" {
+                    text = "0."
+                    infoTextArea.text.append(text)
+                } else {
+                    text.append(".")
+                    infoTextArea.text.append(".")
+                }
+            }
+            
+            displayText.text = text
+            
+        } else {
+            var text: String = infoTextArea.text.components(separatedBy: " ")[0]
+            let unit: String = infoTextArea.text.components(separatedBy: " ")[1]
+            
+            if text.range(of:".") == nil {
+                
+                if text == "0" {
+                    text = "0."
+                    infoTextArea.text.append(text)
+                } else {
+                    text.append(".")
+                    infoTextArea.text.append(".")
+                }
+            }
+            
+            infoTextArea.text = text + " " + unit
+        }
+        
     }
     
     @IBAction func signPressed(sender: AnyObject) {
@@ -104,7 +206,6 @@ class CViewController: UIViewController {
         
         displayText.text = text
         expressionText += text
-        exptext.text.append(text)
     }
     
     @IBAction func percentPressed(sender: AnyObject) {
@@ -142,53 +243,47 @@ class CViewController: UIViewController {
         displayText.text = text
     }
     
-    @IBAction func viewTapped(_ sender: UITapGestureRecognizer) {
-        
-        let views = (frontView: self.frontView, backView: self.backView)
-        
-        let transitionOptions = UIViewAnimationOptions.transitionFlipFromBottom
-        
-        UIView.transition(with: self.Container, duration: 1.0, options: transitionOptions, animations: {
-            // remove the front object...
-            views.frontView.removeFromSuperview()
-            
-            // ... and add the other object
-            self.Container.addSubview(views.backView)
-            
-        }, completion: { finished in
-            // any code entered here will be applied
-            // .once the animation has completed
-        })
-   
-    }
-    
     
     @IBAction func addPressed(sender: AnyObject) {
         
         let text: String = displayText.text
         let dblValue: Double = Double(text)!
         
-        if operation != "" && operation != "+" {
-            performEqualOperation()
-        }
+        let chkOperation = chkOperSign()
         
-        operation = "+"
-        if !operationPerformed && !isOperand2Required {
-            if operand1 == nil {
-                operand1 = dblValue
-                isOperand2Required = true
+        if (!chkOperation){
+            
+            if operation != "" && operation != "+" {
+                performEqualOperation()
+                operation = "+"
             } else {
-                operand2 = dblValue
-                isOperand2Required = false
-                addPressed()
-                operand2 = nil
-                operationPerformed = true
+                
+                operation = "+"
+                
+                if !operationPerformed && !isOperand2Required {
+                    if operand1 == nil {
+                        operand1 = dblValue
+                        isOperand2Required = true
+                    } else {
+                        operand2 = dblValue
+                        isOperand2Required = false
+                        addPressed()
+                        operand2 = nil
+                        operationPerformed = true
+                    }
+                    isClearDisplay = 1
+                }
+                
             }
-            isClearDisplay = 1
+            
+            infoTextArea.text.append(operation)
+            
+        } else {
+            
+            infoTextArea.text = String(infoTextArea.text.characters.dropLast(1))
+            operation = "+"
+            infoTextArea.text.append(operation)
         }
-        
-        expressionText += "+"
-        exptext.text.append(text)
     }
     
     @IBAction func subtractPressed(sender: AnyObject) {
@@ -196,23 +291,37 @@ class CViewController: UIViewController {
         let text: String = displayText.text
         let dblValue: Double = Double(text)!
         
-        if operation != "" && operation != "-" {
-            performEqualOperation()
-        }
+        let chkOperation = chkOperSign()
         
-        operation = "-"
-        if !operationPerformed && !isOperand2Required {
-            if operand1 == nil {
-                operand1 = dblValue
-                isOperand2Required = true
-            } else {
-                operand2 = dblValue
-                isOperand2Required = false
-                subtractPressed()
-                operand2 = nil
-                operationPerformed = true
+        if (!chkOperation){
+            
+            if operation != "" && operation != "-" {
+                performEqualOperation()
+                operation = "-"
+            } else{
+                operation = "-"
+                if !operationPerformed && !isOperand2Required {
+                    if operand1 == nil {
+                        operand1 = dblValue
+                        isOperand2Required = true
+                    } else {
+                        operand2 = dblValue
+                        isOperand2Required = false
+                        subtractPressed()
+                        operand2 = nil
+                        operationPerformed = true
+                    }
+                    isClearDisplay = 1
+                }
             }
-            isClearDisplay = 1
+            
+            infoTextArea.text.append(operation)
+            
+        } else {
+            
+            infoTextArea.text = String(infoTextArea.text.characters.dropLast(1))
+            operation = "-"
+            infoTextArea.text.append(operation)
         }
     }
     
@@ -221,19 +330,37 @@ class CViewController: UIViewController {
         let text: String = displayText.text
         let dblValue: Double = Double(text)!
         
-        operation = "*"
-        if !operationPerformed && !isOperand2Required {
-            if operand1 == nil {
-                operand1 = dblValue
-                isOperand2Required = true
+        let chkOperation = chkOperSign()
+        
+        if (!chkOperation){
+            
+            if operation != "" && operation != "*" {
+                performEqualOperation()
+                operation = "*"
             } else {
-                operand2 = dblValue
-                isOperand2Required = false
-                multiplyPressed()
-                operand2 = nil
-                operationPerformed = true
+                operation = "*"
+                
+                if !operationPerformed && !isOperand2Required {
+                    if operand1 == nil {
+                        operand1 = dblValue
+                        isOperand2Required = true
+                    } else {
+                        operand2 = dblValue
+                        isOperand2Required = false
+                        multiplyPressed()
+                        operand2 = nil
+                        operationPerformed = true
+                    }
+                    isClearDisplay = 1
+                }
             }
-            isClearDisplay = 1
+            
+            infoTextArea.text.append("x")
+        } else {
+            
+            infoTextArea.text = String(infoTextArea.text.characters.dropLast(1))
+            operation = "*"
+            infoTextArea.text.append("x")
         }
     }
     
@@ -242,19 +369,47 @@ class CViewController: UIViewController {
         let text: String = displayText.text
         let dblValue: Double = Double(text)!
         
-        operation = "/"
-        if !operationPerformed && !isOperand2Required {
-            if operand1 == nil {
-                operand1 = dblValue
-                isOperand2Required = true
+        let chkOperation = chkOperSign()
+        
+        if (!chkOperation){
+            
+            if operation != "" && operation != "/" {
+                performEqualOperation()
+                operation = "/"
             } else {
-                operand2 = dblValue
-                isOperand2Required = false
-                dividePressed()
-                operand2 = nil
-                operationPerformed = true
+                operation = "/"
+                if !operationPerformed && !isOperand2Required {
+                    if operand1 == nil {
+                        operand1 = dblValue
+                        isOperand2Required = true
+                    } else {
+                        operand2 = dblValue
+                        isOperand2Required = false
+                        dividePressed()
+                        operand2 = nil
+                        operationPerformed = true
+                    }
+                    isClearDisplay = 1
+                }
             }
-            isClearDisplay = 1
+            
+            
+            infoTextArea.text.append(operation)
+            
+        } else {
+            
+            infoTextArea.text = String(infoTextArea.text.characters.dropLast(1))
+            operation = "/"
+            infoTextArea.text.append(operation)
+        }
+    }
+    
+    private func chkOperSign() -> Bool {
+        let text = infoTextArea.text
+        if((text?.hasSuffix("+"))! || (text?.hasSuffix("-"))! || (text?.hasSuffix("x"))! || (text?.hasSuffix("/"))!){
+            return true;
+        } else {
+            return false;
         }
     }
     
@@ -300,7 +455,11 @@ class CViewController: UIViewController {
     
     @IBAction func equalPressed(sender: AnyObject) {
         
-        performEqualOperation()
+        let chkOperation = chkOperSign()
+        
+        if (!chkOperation){
+            performEqualOperation()
+        }
         
     }
     
@@ -349,6 +508,7 @@ class CViewController: UIViewController {
             
         }
         
+        operand2 = nil
     }
     
     

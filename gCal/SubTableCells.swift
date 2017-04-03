@@ -7,9 +7,9 @@ class SubTableCells: UITableViewCell,UITableViewDataSource,UITableViewDelegate {
     var subMenuTableRight:UITableView?
     var subMenuTableLeft:UITableView?
     
-    var from: String = ""
-    var to: String = ""
     var isLeftDone = 0
+    
+   // static let sharedInstance = SubTableCells()
     
     var catTable: ViewController?
     
@@ -113,7 +113,7 @@ class SubTableCells: UITableViewCell,UITableViewDataSource,UITableViewDelegate {
 //        let selectedCell:UITableViewCell = tableView.cellForRow(at: indexPath)!
 //        selectedCell.contentView.backgroundColor = UIColor(red: 187/255, green: 222/255, blue: 251/255, alpha: 1)
 //        selectedCell.accessoryType = .checkmark
-        tableView.scrollToNearestSelectedRow(at: UITableViewScrollPosition.top, animated: true)
+       // tableView.scrollToNearestSelectedRow(at: UITableViewScrollPosition.top, animated: true)
         
     
         let selectedCell:UITableViewCell? = tableView.cellForRow(at: indexPath)
@@ -122,15 +122,27 @@ class SubTableCells: UITableViewCell,UITableViewDataSource,UITableViewDelegate {
         selectedCell?.tintColor = UIColor(red: 33/255, green: 150/255, blue: 243/255, alpha: 1)
         selectedCell?.accessoryType = .checkmark
         
+        //self.superview.
        // catTable?.from = (selectedCell?.reuseIdentifier)!
+        if(tableView == subMenuTableLeft) {
+            ViewController.from = (selectedCell?.textLabel?.text)!
+            print("From:"+ViewController.from)
+        } else {
+            ViewController.to = (selectedCell?.textLabel?.text)!
+            print("To:"+ViewController.to)
+            //print(selectedCell?.reuseIdentifier as Any)
+        }
         
-        print(selectedCell?.reuseIdentifier as Any)
     }
     
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
         let selectedCell:UITableViewCell? = tableView.cellForRow(at: indexPath)
         selectedCell?.textLabel?.textColor = UIColor.black
         selectedCell?.accessoryType = .none
+        
+        ViewController.from = ""
+        ViewController.to = ""
+        
     }
     
 //    func  tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
