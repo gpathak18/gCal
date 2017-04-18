@@ -3,12 +3,21 @@
 //  gCal
 //
 //  Created by Gaurav Pathak on 2/27/17.
-//  Copyright © 2017 gpmax. All rights reserved.
+//  Copyright © 2017 Gaurav Pathak. All rights reserved.
 //
 
 import UIKit
 
 class CViewController: UIViewController {
+    
+    struct operations {
+        
+        let add: String = "+"
+        let subtract: String = "-"
+        let multiply: String = "x"
+        let divide: String = "/"
+        
+    }
     
     @IBOutlet weak var displayText: UITextView!
     @IBOutlet weak var infoTextArea: UITextView!
@@ -28,105 +37,103 @@ class CViewController: UIViewController {
     let cnvtImage = UIImage(named:"ic_filter_none_18pt")?.withRenderingMode(
         UIImageRenderingMode.alwaysTemplate)
     
+    
     var convText: String = ""
     private var selectedText: String = ""
-    private var operation: String = ""
-    private var operand1: Double? = nil
-    private var operand2: Double? = nil
-    private var isClearDisplay: Int = 0
-    private var operationPerformed = false
-    private var isOperand2Required = false
-    
-    private var expressionText = ""
-    
     private var isConvertorOn = 0
     
+    //private var previousAns: Double = 0
+    
+    private var subExpresssion = ""
+    private var isSubExp = false
+    
+    private var isEqualPressed = false
+    
+    private var currentNumber = ""
+    
+    private var expression = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
         UIApplication.shared.statusBarStyle = UIStatusBarStyle.lightContent
         displayText.text = "0"
-        
         conversionText.tintColor = UIColor(white:0, alpha:1)
         conversionText.setImage(cnvtImage, for:UIControlState.normal)
-        
-        //unitTextArea.text.minimumScaleFactor = 10/UIFont.labelFontSize
-        //unitTextArea.adjustsFontSizeToFitWidth = true
-        
-        // self.conversionText.setTitle(PassData.sharedInstance.cnvrTxt, for: .normal)
+        swapBtn.setImage(swapImage, for:UIControlState.normal)
     }
     
     @IBAction func unwindToCV(segue: UIStoryboardSegue) {
         unitTextArea.tintColor = UIColor.black
         
-        if PassData.sharedInstance.from != nil && PassData.sharedInstance.to != nil {
-            unitTextArea.text = PassData.sharedInstance.from.symbol + " to " + PassData.sharedInstance.to.symbol
-            isConvertorOn = 1
-            isUnitToggle = 1
-            clearAll()
-        }
+        unitTextArea.text = PassData.sharedInstance.from.symbol + " to " + PassData.sharedInstance.to.symbol
+        infoTextArea.text = "0 " + PassData.sharedInstance.from.symbol
+        isConvertorOn = 1
+        isUnitToggle = 1
+        displayText.text = "0"
         
     }
     
     
     @IBAction func buttonPressed(sender: AnyObject) {
         
-        var text: String = displayText.text
+        isEqualPressed = false
+        var text: String = infoTextArea.text
         
-        text = text.components(separatedBy: " ")[0]
+        if isConvertorOn == 1 {
+            text = text.components(separatedBy: " ")[0]
+            if text == "0" {
+                infoTextArea.text = ""
+            } else {
+                infoTextArea.text = text
+            }
+        }
         
-        infoTextArea.text = infoTextArea.text.components(separatedBy: " ")[0]
         
-        operationPerformed = false
         
         if text == "0" && sender.tag == 0 {
             text = "0"
             infoTextArea.text.append("")
+            currentNumber = ""
         } else if text == "0" && sender.tag != 0 {
             text = String(sender.tag)
             infoTextArea.text.append(String(sender.tag))
-        } else if isClearDisplay == 1 {
-            isClearDisplay = 0
-            text = String(sender.tag)
-            infoTextArea.text.append(String(sender.tag))
+            currentNumber.append(String(sender.tag))
         } else {
             text.append(String(sender.tag))
             infoTextArea.text.append(String(sender.tag))
+            currentNumber.append(String(sender.tag))
         }
         
-        if operation != "" && isOperand2Required {
-            isOperand2Required = false
-        }
+        
         
         //infoTextArea.text = infoTextArea.text+String(sender.tag)
         
         if isConvertorOn == 1 {
+            
             infoTextArea.text =  infoTextArea.text + " " + PassData.sharedInstance.from.symbol
-        } else {
             
-            displayText.text = text
+            var val: String = infoTextArea.text
             
+            val = val.components(separatedBy: " ")[0]
+            
+            let convertedUnit = ConversionUtility.convert(category: PassData.sharedInstance.category, from: PassData.sharedInstance.from, to: PassData.sharedInstance.to, value: Double(val)!)
+            
+            displayText.text = convertedUnit
         }
         
         
+        
     }
     
-    func clearAll() {
-        displayText.text = "0"
-        operand1 = nil
-        operand2 = nil
-        operation = ""
-        isOperand2Required = false
-        operationPerformed = false
-        isClearDisplay = 0
-        expressionText = ""
-        infoTextArea.text = ""
-    }
     
     @IBAction func clearPressed(sender: AnyObject) {
-        clearAll()
+        infoTextArea.text = ""
         unitTextArea.text = ""
+        displayText.text = "0"
         isConvertorOn = 0
+        isSubExp = false
+        subExpresssion = ""
+        currentNumber = ""
     }
     
     @IBAction func convertPressed(_ sender: Any) {
@@ -136,67 +143,79 @@ class CViewController: UIViewController {
         //            self.unitTextArea.transform = CGAffineTransform(rotationAngle: .pi)
         //        })
         
-        var val: String = infoTextArea.text
-        
-        val = val.components(separatedBy: " ")[0]
-        
-        let convertedUnit = ConversionUtility.convert(category: PassData.sharedInstance.category, from: PassData.sharedInstance.from, to: PassData.sharedInstance.to, value: Double(val)!)
-        
-        if isUnitToggle == 0 {
-            swapBtn.tintColor = UIColor(white:0, alpha:1)
-            swapBtn.setImage(swapImage, for:UIControlState.normal)
-            unitTextArea.text = PassData.sharedInstance.from.symbol + " to " + PassData.sharedInstance.to.symbol
-            isUnitToggle = 1
-        } else {
-            unitTextArea.text = PassData.sharedInstance.to.symbol + " to " + PassData.sharedInstance.from.symbol
-            isUnitToggle = 0
+        if isConvertorOn == 1 {
+            
+            var val: String = infoTextArea.text
+            
+            val = val.components(separatedBy: " ")[0]
+            
+            if isUnitToggle == 0 {
+                unitTextArea.text = PassData.sharedInstance.from.symbol + " to " + PassData.sharedInstance.to.symbol
+                infoTextArea.text =  val + " " + PassData.sharedInstance.from.symbol
+                let convertedUnit = ConversionUtility.convert(category: PassData.sharedInstance.category, from: PassData.sharedInstance.from, to: PassData.sharedInstance.to, value: Double(val)!)
+                
+                displayText.text = convertedUnit
+                isUnitToggle = 1
+            } else {
+                unitTextArea.text = PassData.sharedInstance.to.symbol + " to " + PassData.sharedInstance.from.symbol
+                infoTextArea.text =  val + " " + PassData.sharedInstance.to.symbol
+                let convertedUnit = ConversionUtility.convert(category: PassData.sharedInstance.category, from: PassData.sharedInstance.to, to: PassData.sharedInstance.from, value: Double(val)!)
+                
+                displayText.text = convertedUnit
+                isUnitToggle = 0
+            }
+            
         }
-        
-        displayText.text = convertedUnit
-        
         
     }
     @IBAction func dotPressed(sender: AnyObject) {
-        
+        isEqualPressed = false
         if isConvertorOn == 0 {
-            var text: String = displayText.text
+            var text: String = currentNumber
             
             if text.range(of:".") == nil {
                 
-                if text == "0" {
+                if  text == "0" || text == ""{
                     text = "0."
-                    infoTextArea.text.append(text)
+                    infoTextArea.text=text
+                    currentNumber = text+currentNumber
                 } else {
                     text.append(".")
                     infoTextArea.text.append(".")
+                    currentNumber.append(".")
                 }
             }
             
-            displayText.text = text
+            //displayText.text = text
             
         } else {
-            var text: String = infoTextArea.text.components(separatedBy: " ")[0]
-            let unit: String = infoTextArea.text.components(separatedBy: " ")[1]
+            
+            let text: String = infoTextArea.text
             
             if text.range(of:".") == nil {
                 
-                if text == "0" {
+                var text: String = infoTextArea.text.components(separatedBy: " ")[0]
+                let unit: String = infoTextArea.text.components(separatedBy: " ")[1]
+                
+                if text == "0" || text == "" {
                     text = "0."
-                    infoTextArea.text.append(text)
+                    infoTextArea.text = text
                 } else {
                     text.append(".")
                     infoTextArea.text.append(".")
                 }
+                
+                infoTextArea.text = text + " " + unit
             }
             
-            infoTextArea.text = text + " " + unit
+            
         }
         
     }
     
     @IBAction func signPressed(sender: AnyObject) {
-        
-        var text: String = displayText.text
+        isEqualPressed = false
+        var text: String = infoTextArea.text
         
         if text.hasPrefix("-") {
             text = String(text.characters.dropFirst(1))
@@ -204,30 +223,28 @@ class CViewController: UIViewController {
             text = "-" + text
         }
         
-        displayText.text = text
-        expressionText += text
+        infoTextArea.text = text
+        
     }
     
     @IBAction func percentPressed(sender: AnyObject) {
-        
+        isEqualPressed = false
         var text: String = displayText.text
         
         text = String(Double(text)!/100)
         
         displayText.text = text
         
-        isClearDisplay = 1
     }
     
     @IBAction func sqrtPressed(sender: AnyObject) {
-        
+        isEqualPressed = false
         var dblValue: Double = Double(displayText.text)!
         
         dblValue = sqrt(dblValue)
         
         displayResult(result: dblValue)
         
-        isClearDisplay = 1
     }
     
     private func displayResult(result: Double){
@@ -246,271 +263,153 @@ class CViewController: UIViewController {
     
     @IBAction func addPressed(sender: AnyObject) {
         
-        let text: String = displayText.text
-        let dblValue: Double = Double(text)!
         
-        let chkOperation = chkOperSign()
         
-        if (!chkOperation){
+        
+        if checkForAnswer() {
             
-            if operation != "" && operation != "+" {
-                performEqualOperation()
-                operation = "+"
+            //  previousAns = Double(displayText.text)!
+            
+            if infoTextArea.text.hasPrefix("{") && !isEqualPressed {
+                infoTextArea.text.append(" "+operations().add + " ")
             } else {
-                
-                operation = "+"
-                
-                if !operationPerformed && !isOperand2Required {
-                    if operand1 == nil {
-                        operand1 = dblValue
-                        isOperand2Required = true
-                    } else {
-                        operand2 = dblValue
-                        isOperand2Required = false
-                        addPressed()
-                        operand2 = nil
-                        operationPerformed = true
-                    }
-                    isClearDisplay = 1
-                }
-                
+                infoTextArea.text = "{Ans} ".appending(operations().add + " ")
             }
             
-            infoTextArea.text.append(operation)
+            isSubExp = true
             
         } else {
             
-            infoTextArea.text = String(infoTextArea.text.characters.dropLast(1))
-            operation = "+"
-            infoTextArea.text.append(operation)
+            infoTextArea.text.append(" " + operations().add + " ")
+            
         }
+        
+    
+        
+        expression += String(describing: Double(currentNumber))
+        expression.append(operations().add)
+        
+        isEqualPressed = false
+        currentNumber = ""
+        
     }
     
     @IBAction func subtractPressed(sender: AnyObject) {
         
-        let text: String = displayText.text
-        let dblValue: Double = Double(text)!
-        
-        let chkOperation = chkOperSign()
-        
-        if (!chkOperation){
+        if checkForAnswer() {
             
-            if operation != "" && operation != "-" {
-                performEqualOperation()
-                operation = "-"
-            } else{
-                operation = "-"
-                if !operationPerformed && !isOperand2Required {
-                    if operand1 == nil {
-                        operand1 = dblValue
-                        isOperand2Required = true
-                    } else {
-                        operand2 = dblValue
-                        isOperand2Required = false
-                        subtractPressed()
-                        operand2 = nil
-                        operationPerformed = true
-                    }
-                    isClearDisplay = 1
-                }
+            // previousAns = Double(displayText.text)!
+            
+            if infoTextArea.text.hasPrefix("{") && !isEqualPressed{
+                infoTextArea.text.append(" "+operations().subtract + " ")
+            } else {
+                infoTextArea.text = "{Ans} ".appending(operations().subtract + " ")
             }
             
-            infoTextArea.text.append(operation)
+            isSubExp = true
+            
             
         } else {
             
-            infoTextArea.text = String(infoTextArea.text.characters.dropLast(1))
-            operation = "-"
-            infoTextArea.text.append(operation)
+            infoTextArea.text.append(" " + operations().subtract + " ")
+            
         }
+        
+        isEqualPressed = false
+        currentNumber = ""
+        
     }
     
     @IBAction func multiplyPressed(sender: AnyObject) {
         
-        let text: String = displayText.text
-        let dblValue: Double = Double(text)!
-        
-        let chkOperation = chkOperSign()
-        
-        if (!chkOperation){
+        if checkForAnswer() {
             
-            if operation != "" && operation != "*" {
-                performEqualOperation()
-                operation = "*"
+            if infoTextArea.text.hasPrefix("{") && !isEqualPressed {
+                infoTextArea.text.append(" "+operations().multiply + " ")
             } else {
-                operation = "*"
-                
-                if !operationPerformed && !isOperand2Required {
-                    if operand1 == nil {
-                        operand1 = dblValue
-                        isOperand2Required = true
-                    } else {
-                        operand2 = dblValue
-                        isOperand2Required = false
-                        multiplyPressed()
-                        operand2 = nil
-                        operationPerformed = true
-                    }
-                    isClearDisplay = 1
-                }
+                infoTextArea.text = "{Ans} ".appending(operations().multiply + " ")
             }
             
-            infoTextArea.text.append("x")
+            isSubExp = true
+            
+            
         } else {
             
-            infoTextArea.text = String(infoTextArea.text.characters.dropLast(1))
-            operation = "*"
-            infoTextArea.text.append("x")
+            infoTextArea.text.append(" " + operations().multiply + " ")
+            
         }
+        
+        isEqualPressed = false
+        currentNumber = ""
     }
     
     @IBAction func dividePressed(sender: AnyObject) {
         
-        let text: String = displayText.text
-        let dblValue: Double = Double(text)!
         
-        let chkOperation = chkOperSign()
-        
-        if (!chkOperation){
+        if checkForAnswer() {
             
-            if operation != "" && operation != "/" {
-                performEqualOperation()
-                operation = "/"
+            //previousAns = Double(displayText.text)!
+            
+            if infoTextArea.text.hasPrefix("{") && !isEqualPressed{
+                infoTextArea.text.append(" "+operations().divide + " ")
             } else {
-                operation = "/"
-                if !operationPerformed && !isOperand2Required {
-                    if operand1 == nil {
-                        operand1 = dblValue
-                        isOperand2Required = true
-                    } else {
-                        operand2 = dblValue
-                        isOperand2Required = false
-                        dividePressed()
-                        operand2 = nil
-                        operationPerformed = true
-                    }
-                    isClearDisplay = 1
-                }
+                infoTextArea.text = "{Ans} ".appending(operations().divide + " ")
             }
             
+            isSubExp = true
             
-            infoTextArea.text.append(operation)
             
         } else {
             
-            infoTextArea.text = String(infoTextArea.text.characters.dropLast(1))
-            operation = "/"
-            infoTextArea.text.append(operation)
+            infoTextArea.text.append(" " + operations().divide + " ")
+            
         }
+        
+        isEqualPressed = false
+        currentNumber = ""
     }
     
-    private func chkOperSign() -> Bool {
-        let text = infoTextArea.text
-        if((text?.hasSuffix("+"))! || (text?.hasSuffix("-"))! || (text?.hasSuffix("x"))! || (text?.hasSuffix("/"))!){
-            return true;
+    private func checkForAnswer() -> Bool {
+        
+        if displayText.text == "0" {
+            return false
         } else {
-            return false;
+            return true
         }
     }
     
-    private func dividePressed() {
-        let dblValue = divide(a: operand1!, b: operand2!)
-        operand1 = dblValue
-        displayResult(result: dblValue)
-    }
     
-    private func multiplyPressed() {
-        let dblValue = multiply(a: operand1!, b: operand2!)
-        operand1 = dblValue
-        displayResult(result: dblValue)
-    }
-    
-    private func subtractPressed() {
-        let dblValue = subtract(a: operand1!, b: operand2!)
-        operand1 = dblValue
-        displayResult(result: dblValue)
-    }
-    
-    private func addPressed() {
-        let dblValue = addition(a: operand1!, b: operand2!)
-        operand1 = dblValue
-        displayResult(result: dblValue)
-    }
-    
-    private func addition(a: Double, b: Double) -> Double {
-        return a+b
-    }
-    
-    private func multiply(a: Double, b: Double) -> Double {
-        return a*b
-    }
-    
-    private func divide(a: Double, b: Double) -> Double {
-        return a/b
-    }
-    
-    private func subtract(a: Double, b: Double) -> Double {
-        return a-b
-    }
     
     @IBAction func equalPressed(sender: AnyObject) {
-        
-        let chkOperation = chkOperSign()
-        
-        if (!chkOperation){
-            performEqualOperation()
+        if isConvertorOn == 0 {
+            currentNumber = ""
+            var numericExpression: String = ""
+            
+            if isSubExp  {
+                
+                numericExpression = subExpresssion + infoTextArea.text.components(separatedBy: "}")[1]
+                
+            } else {
+                numericExpression = infoTextArea.text
+            }
+            
+            numericExpression = numericExpression.trimmingCharacters(in: .whitespaces)
+            numericExpression = numericExpression.replacingOccurrences(of: "x", with: "*")
+            
+            let expression = NSExpression(format: numericExpression)
+            
+            let result = expression.expressionValue(with: nil, context: nil) as! Double
+            
+            subExpresssion = String(result)
+            
+            displayResult(result: result)
+            
+            isEqualPressed = true
+            
+            
         }
         
     }
-    
-    private func performEqualOperation() {
-        
-        
-        let dblValue: Double = Double(displayText.text)!
-        
-        switch operation {
-            
-        case "+":
-            
-            if operand2 == nil {
-                operand2 = dblValue
-            }
-            addPressed()
-            isClearDisplay = 1
-            
-        case "-":
-            
-            if operand2 == nil {
-                operand2 = dblValue
-            }
-            subtractPressed()
-            isClearDisplay = 1
-            
-        case "*":
-            
-            if operand2 == nil {
-                operand2 = dblValue
-            }
-            multiplyPressed()
-            isClearDisplay = 1
-            
-        case "/":
-            
-            if operand2 == nil {
-                operand2 = dblValue
-            }
-            dividePressed()
-            isClearDisplay = 1
-            
-        default:
-            
-            displayText.text = "ERROR!"
-            
-        }
-        
-        operand2 = nil
-    }
-    
     
     
 }
